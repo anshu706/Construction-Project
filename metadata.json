@@ -1,0 +1,6 @@
+{
+  "name": "Construction Project Monitoring Dashboard",
+  "description": "An enterprise-grade real-time monitoring dashboard for construction projects, featuring role-based views, interactive schedule tracking, financial variance analysis, safety compliance logs, and a site operations simulator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
