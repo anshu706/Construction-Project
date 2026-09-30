@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { GoogleGenAI } from '@google/genai';
 import { ProjectState, Task, Invoice, SafetyIncident, OperationLog } from '../types';
 import { formatINR } from '../currency';
 import { Sparkles, Bot, Send, X, RefreshCw, AlertTriangle, ShieldCheck, TrendingUp, Calendar, Zap, MessageSquare, Wifi, WifiOff, Cpu } from 'lucide-react';
@@ -42,18 +41,18 @@ function buildSystemPrompt(state: AICopilotDrawerProps['state'], userRole: strin
   const criticalTasks = state.tasks.filter(t => t.priority === 'Critical');
   const delayedTasks = state.tasks.filter(t => t.status === 'Delayed');
 
-  return `You are ConstructIQ Copilot, an expert AI construction project intelligence assistant for the Bangalore Commercial Tower project (5-story mixed-use commercial tower, Bangalore Tech Park Phase 2).
+  return `You are ConstructIQ Copilot, an expert AI construction project intelligence assistant for a simulated mixed-use commercial tower project.
 
 ## Live Site Telemetry (Real-time):
 - Overall Progress: ${avgProgress}% physical completion
-- Total Project Budget: ₹12,50,00,000 (₹12.50 Crores)  
+- Total Project Budget: Use the configured simulated project baseline.
 - Spent/Approved: ${formatINR(totalSpent)} (${((totalSpent / 125000000) * 100).toFixed(1)}% of budget)
 - CPI: 1.08 (Cost Performance Index – Under Budget)
 - Active Tasks: ${state.tasks.filter(t => t.status === 'In Progress').length}/${state.tasks.length} running
 - Critical Path: ${criticalTasks.map(t => `${t.name} (${t.progress}%)`).join(', ') || 'None'}
 - Delayed Tasks: ${delayedTasks.length === 0 ? 'None' : delayedTasks.map(t => t.name).join(', ')}
 - Open Safety Incidents: ${openIncidents.length}
-- Safety Days Streak: 184 Days Zero Lost-Time
+- Safety Days Streak: Use the simulated safety streak.
 - Weather: ${state.weather.condition}, ${state.weather.temp}°F, Wind ${state.weather.wind}mph
 - Active Personnel: 42 subcontractors on site
 - Current User Role: ${userRole}
@@ -79,7 +78,7 @@ function generateLocalResponse(query: string, state: AICopilotDrawerProps['state
 
   if (q.includes('briefing') || q.includes('executive') || q.includes('summary')) {
     return `### 📋 Daily Executive Site Briefing
-**Project:** Bangalore Commercial Tower (Mixed-Use, Tech Park Phase 2)
+**Project:** Simulated Mixed-Use Commercial Tower
 **Status:** 🟢 **ON TRACK (${avgProgress}% Physical Milestone Completion)**
 
 1. **Structural Schedule Health:**
@@ -88,11 +87,11 @@ function generateLocalResponse(query: string, state: AICopilotDrawerProps['state
    - Plumbing & HVAC rough-ins active at 8–15%.
 
 2. **INR Financial Health:**
-   - **Total Budget:** ₹12.50 Crores | **Disbursed YTD:** ${formatINR(totalSpent)}
+  - **Total Budget:** Configured simulated baseline | **Disbursed YTD:** ${formatINR(totalSpent)}
    - **CPI:** **1.08 (Under Budget by ~₹34.5 Lakhs)**
 
 3. **EHS Safety:**
-   - Zero Lost-Time streak: **184 Days**
+  - Zero Lost-Time streak: **Simulated safety streak**
    - Weather: **${state.weather.condition} (${state.weather.temp}°F, Wind: ${state.weather.wind}mph)**
    - Crane operations safe (< 20mph threshold).`;
   }
@@ -115,14 +114,14 @@ function generateLocalResponse(query: string, state: AICopilotDrawerProps['state
   if (q.includes('budget') || q.includes('financial') || q.includes('cost') || q.includes('inr')) {
     return `### 💰 INR Financial Variance & Cashflow Analysis
 
-- **Total Allocated Baseline:** ₹12.50 Crores
+- **Total Allocated Baseline:** Configured simulated baseline
 - **Incurred & Approved Spend:** ${formatINR(totalSpent)}
 - **Pending Claims:** ${formatINR(state.invoices.filter(i => i.status === 'Pending').reduce((a, b) => a + b.amount, 0))}
 
 **Cost Saving Insights:**
 1. Concrete batching efficiency saved ~₹12.4 Lakhs vs. original estimate.
 2. Contingency reserve remaining: **₹1,25,00,000 (100% intact)**.
-3. Recommended: Approve INV-1009 (FlowTech Plumbing) to lock material discount.`;
+3. Recommended: Review the pending plumbing invoice before approving material commitments.`;
   }
 
   if (q.includes('weather') || q.includes('crane') || q.includes('rain') || q.includes('wind')) {
@@ -150,7 +149,7 @@ function generateLocalResponse(query: string, state: AICopilotDrawerProps['state
   return `### 💡 ConstructIQ Site Insights
 Based on real-time analysis of your active site data:
 - **${state.tasks.length} Schedule Tasks** averaging **${avgProgress}%** completion.
-- **Financial Status:** ${formatINR(totalSpent)} disbursed against ₹12.50 Cr total (CPI: 1.08).
+- **Financial Status:** ${formatINR(totalSpent)} disbursed against the configured simulated baseline (CPI: 1.08).
 - **Safety:** ${openIncidents.length === 0 ? 'Zero active high-risk incidents.' : `${openIncidents.length} open case(s) under mitigation.`}
 
 Would you like an **Executive Briefing**, **Delay Risk Analysis**, or **Subcontractor Variance** report?`;
@@ -166,7 +165,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     {
       id: 'm1',
       sender: 'assistant',
-      text: `Hello **${userRole}**! I am **ConstructIQ Copilot**, your real-time site intelligence assistant powered by NVIDIA NIM (Meta Llama 3.2). I have live telemetry on your ${state.tasks.length} schedule phases, ₹12.50 Cr INR budget, active safety audits, and current weather (${state.weather.condition}, ${state.weather.wind}mph wind). How can I assist your operations today?`,
+      text: `Hello **${userRole}**! I am **ConstructIQ Copilot**, your real-time site intelligence assistant powered by NVIDIA NIM (Meta Llama 3.2). I have live telemetry on your ${state.tasks.length} schedule phases, the configured simulated budget, active safety audits, and current weather (${state.weather.condition}, ${state.weather.wind}mph wind). How can I assist your operations today?`,
       timestamp: 'Just now',
       category: 'general',
       isAI: false
@@ -178,7 +177,6 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
   const [activeEngine, setActiveEngine] = useState<string>('Initializing AI Engine...');
   const [usingRealAI, setUsingRealAI] = useState<boolean | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const geminiClientRef = useRef<GoogleGenAI | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -186,26 +184,6 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
 
   // Determine active AI engine on mount
   useEffect(() => {
-    const envNvidia = (import.meta as any).env?.VITE_NVIDIA_API_KEY || (window as any).__NVIDIA_API_KEY__;
-    const envGemini = (import.meta as any).env?.VITE_GEMINI_API_KEY || (window as any).__GEMINI_API_KEY__;
-
-    if (envNvidia) {
-      setUsingRealAI(true);
-      setActiveEngine('NVIDIA NIM • Llama 3.2 Vision');
-      return;
-    }
-
-    if (envGemini) {
-      try {
-        geminiClientRef.current = new GoogleGenAI({ apiKey: envGemini });
-        setUsingRealAI(true);
-        setActiveEngine('Google Gemini 2.0 Flash');
-        return;
-      } catch {
-        // Fall through to server check
-      }
-    }
-
     // Check server proxy health
     fetch('/api/health')
       .then(r => r.json())
@@ -238,35 +216,6 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
 
   if (!isOpen) return null;
 
-  // Direct client call to NVIDIA NIM
-  const sendViaNvidiaDirect = async (query: string, apiKey: string): Promise<string> => {
-    const systemPrompt = buildSystemPrompt(state, userRole);
-    const resp = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'meta/llama-3.2-11b-vision-instruct',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: query }
-        ],
-        temperature: 0.4,
-        max_tokens: 800
-      })
-    });
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.detail || err.error || `NVIDIA NIM HTTP ${resp.status}`);
-    }
-
-    const data = await resp.json();
-    return data.choices?.[0]?.message?.content || 'No response returned from NVIDIA AI.';
-  };
-
   // Call through Express proxy server
   const sendViaServerProxy = async (query: string): Promise<{ text: string; provider?: string }> => {
     const resp = await fetch('/api/copilot', {
@@ -277,17 +226,6 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     if (!resp.ok) throw new Error(`Server error ${resp.status}`);
     const data = await resp.json();
     return { text: data.text, provider: data.provider };
-  };
-
-  // Direct call to Gemini
-  const sendViaGeminiDirect = async (query: string): Promise<string> => {
-    const systemPrompt = buildSystemPrompt(state, userRole);
-    const response = await geminiClientRef.current!.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: [{ role: 'user', parts: [{ text: query }] }],
-      config: { systemInstruction: systemPrompt, maxOutputTokens: 800, temperature: 0.4 }
-    });
-    return response.text ?? '';
   };
 
   const handleSend = async (textToSend?: string) => {
@@ -305,54 +243,19 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     setInputQuery('');
     setIsAnalyzing(true);
 
-    const nvidiaKey = (import.meta as any).env?.VITE_NVIDIA_API_KEY || (window as any).__NVIDIA_API_KEY__;
-
     try {
       let replyText: string;
       let isAI = false;
       let providerName = 'Local';
 
-      // 1. Direct NVIDIA NIM call from client if key available
-      if (nvidiaKey) {
-        try {
-          replyText = await sendViaNvidiaDirect(q, nvidiaKey);
-          isAI = true;
-          providerName = 'NVIDIA NIM';
-        } catch (nvidiaErr: any) {
-          console.warn('[AICopilot] Direct NVIDIA failed, trying proxy...', nvidiaErr);
-          try {
-            const proxyRes = await sendViaServerProxy(q);
-            replyText = proxyRes.text;
-            isAI = true;
-            providerName = proxyRes.provider || 'NVIDIA Proxy';
-          } catch {
-            replyText = generateLocalResponse(q, state, userRole);
-            isAI = false;
-          }
-        }
-      }
-      // 2. Direct Gemini call
-      else if (geminiClientRef.current) {
-        try {
-          replyText = await sendViaGeminiDirect(q);
-          isAI = true;
-          providerName = 'Google Gemini';
-        } catch {
-          replyText = generateLocalResponse(q, state, userRole);
-          isAI = false;
-        }
-      }
-      // 3. Server Proxy call
-      else {
-        try {
-          const proxyRes = await sendViaServerProxy(q);
-          replyText = proxyRes.text;
-          isAI = true;
-          providerName = proxyRes.provider || 'AI Proxy';
-        } catch {
-          replyText = generateLocalResponse(q, state, userRole);
-          isAI = false;
-        }
+      try {
+        const proxyRes = await sendViaServerProxy(q);
+        replyText = proxyRes.text;
+        isAI = true;
+        providerName = proxyRes.provider || 'AI Proxy';
+      } catch {
+        replyText = generateLocalResponse(q, state, userRole);
+        isAI = false;
       }
 
       const botMsg: Message = {

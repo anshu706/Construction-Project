@@ -24,7 +24,7 @@ export const USER_PROFILES: UserProfile[] = [
     focus: 'Daily task dispatch, worker safety, crew productivity'
   },
   {
-    name: 'Amit Kumar',
+    name: 'Project Coordinator',
     role: 'FinanceManager',
     title: 'Financial Controller',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
@@ -109,7 +109,7 @@ export const INITIAL_TASKS: Task[] = [
     startDate: '2026-08-18',
     endDate: '2026-09-15',
     progress: 8,
-    assignedCrew: 'FlowTech Plumbing',
+    assignedCrew: 'Plumbing Subcontractor',
     dependencies: ['T2'],
     priority: 'High',
     status: 'In Progress',
@@ -232,8 +232,8 @@ export const INITIAL_INVOICES: Invoice[] = [
     description: 'HVAC engineering designs and initial ductwork fabrication deposit'
   },
   {
-    id: 'INV-1009',
-    vendor: 'FlowTech Plumbing',
+    id: 'INV-DEMO-009',
+    vendor: 'Plumbing Subcontractor',
     amount: usdToInr(32000),
     category: 'Subcontractors',
     status: 'Pending',
@@ -391,8 +391,8 @@ export const INITIAL_LOGS: OperationLog[] = [
     timestamp: '2026-08-02T16:22:45-07:00',
     type: 'financial',
     severity: 'info',
-    message: `Amit Kumar logged a pending Invoice (INV-1009) from FlowTech Plumbing for ${formatINR(usdToInr(32000))}.`,
-    user: 'Amit Kumar'
+    message: `The site coordinator logged a pending plumbing invoice for ${formatINR(usdToInr(32000))}.`,
+    user: 'Project Coordinator'
   },
   {
     id: 'L96',
@@ -414,12 +414,12 @@ export const INITIAL_LOGS: OperationLog[] = [
 
 export const SIMULATION_EVENTS = [
   {
-    message: 'Plumbing Supplier resolved backorder. FlowTech Plumbing progress increased to 12%.',
+    message: 'The plumbing supplier resolved a backorder. Plumbing progress increased to 12%.',
     apply: (state: ProjectState): Partial<ProjectState> => {
       const updatedTasks = state.tasks.map(t => t.id === 'T5' ? { ...t, progress: 12, notes: 'Copper pipes arrived.' } : t);
       return { tasks: updatedTasks };
     },
-    log: { type: 'task_update', severity: 'success', message: 'Plumbing Supplier resolved backorder. FlowTech plumbing active.', user: 'Procurement' }
+    log: { type: 'task_update', severity: 'success', message: 'The plumbing supplier resolved a backorder. Plumbing work is active.', user: 'Procurement' }
   },
   {
     message: 'Minor Scaffold Clamps loose reported on Level 4 framing. Work halted for 10 minutes.',
@@ -429,12 +429,12 @@ export const SIMULATION_EVENTS = [
     log: { type: 'safety', severity: 'warning', message: 'Site inspection: Loose scaffold brackets reported on Level 4. Quickly secured.', user: 'Vikram Singh' }
   },
   {
-    message: `Amit Kumar approved material Invoice INV-1010 (${formatINR(usdToInr(28000))}).`,
+    message: `The project coordinator approved a material invoice (${formatINR(usdToInr(28000))}).`,
     apply: (state: ProjectState): Partial<ProjectState> => {
       const updatedInvoices = state.invoices.map(i => i.id === 'INV-1010' ? { ...i, status: 'Approved' as const } : i);
       return { invoices: updatedInvoices };
     },
-    log: { type: 'financial', severity: 'success', message: `Invoice INV-1010 Volt Builders Supply (${formatINR(usdToInr(28000))}) approved by Amit Kumar.`, user: 'Amit Kumar' }
+    log: { type: 'financial', severity: 'success', message: `A material invoice from the sample supplier (${formatINR(usdToInr(28000))}) was approved by the project coordinator.`, user: 'Project Coordinator' }
   },
   {
     message: 'Site weather warning: Wind gust speeds increased to 18mph. Tower crane under high caution.',
@@ -522,7 +522,7 @@ export const INITIAL_PUNCH_ITEMS: import('./types').PunchItem[] = [
     location: 'Restroom Rough-in Core - Level 1',
     phase: 'HVAC/Electrical',
     severity: 'Minor',
-    subcontractor: 'FlowTech Plumbing',
+    subcontractor: 'Plumbing Subcontractor',
     status: 'Open',
     dateReported: '2026-08-02',
     photoUrl: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=400&q=80',

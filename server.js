@@ -1,52 +1,18 @@
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
 // server.ts
-var server_exports = {};
-__export(server_exports, {
-  default: () => server_default
-});
-module.exports = __toCommonJS(server_exports);
-var import_config = require("dotenv/config");
-var import_express = __toESM(require("express"), 1);
-var import_genai = require("@google/genai");
-var import_path = __toESM(require("path"), 1);
-var import_url = require("url");
-var import_meta = {};
-var __dirname = import_path.default.dirname((0, import_url.fileURLToPath)(import_meta.url));
-var app = (0, import_express.default)();
-app.use(import_express.default.json({ limit: "1mb" }));
-var distPath = import_path.default.join(__dirname, "dist");
-app.use(import_express.default.static(distPath));
+import "dotenv/config";
+import express from "express";
+import { GoogleGenAI } from "@google/genai";
+import path from "path";
+import { fileURLToPath } from "url";
+var __dirname = path.dirname(fileURLToPath(import.meta.url));
+var app = express();
+app.use(express.json({ limit: "1mb" }));
+var distPath = path.join(__dirname, "dist");
+app.use(express.static(distPath));
 var PORT = process.env.PORT || 3001;
-var NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || process.env.VITE_NVIDIA_API_KEY;
+var NVIDIA_API_KEY = process.env.NVIDIA_API_KEY;
 var NVIDIA_MODEL = process.env.NVIDIA_MODEL || "meta/llama-3.2-11b-vision-instruct";
-var GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+var GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 app.post("/api/copilot", async (req, res) => {
   if (!NVIDIA_API_KEY && !GEMINI_API_KEY) {
     return res.status(503).json({
@@ -66,18 +32,18 @@ app.post("/api/copilot", async (req, res) => {
     const criticalTasks = context.tasks.filter((t) => t.priority === "Critical");
     const delayedTasks = context.tasks.filter((t) => t.status === "Delayed");
     const systemPrompt = `You are ConstructIQ Copilot, an expert AI construction project intelligence assistant.
-You have live telemetry access to the Bangalore Commercial Tower project (5-story mixed-use commercial tower, Bangalore Tech Park Phase 2).
+You have live telemetry access to a simulated mixed-use commercial tower project.
 
 ## Live Site Data (Real-time Telemetry):
 - **Overall Progress:** ${avgProgress}% physical completion
-- **Total Budget:** \u20B912,50,00,000 (\u20B912.50 Crores)
+- **Total Budget:** Use the configured simulated project baseline.
 - **Spent/Approved:** \u20B9${totalSpent.toLocaleString("en-IN")} (${(totalSpent / 125e6 * 100).toFixed(1)}% of budget)
 - **CPI:** ${(125e6 * 0.714 / Math.max(totalSpent, 1)).toFixed(2) || "1.08"} (Cost Performance Index)
 - **Active Tasks:** ${context.tasks.filter((t) => t.status === "In Progress").length}/${context.tasks.length} tasks running
 - **Critical Path Tasks:** ${criticalTasks.map((t) => `${t.name} (${t.progress}%)`).join(", ") || "None"}
 - **Delayed Tasks:** ${delayedTasks.length === 0 ? "None" : delayedTasks.map((t) => t.name).join(", ")}
 - **Open Safety Incidents:** ${openIncidents.length} (${openIncidents.map((i) => i.type).join(", ") || "None"})
-- **Safety Days Streak:** 184 Days Zero Lost-Time
+- **Safety Days Streak:** Use the simulated safety streak.
 - **Weather:** ${context.weather.condition}, ${context.weather.temp}\xB0F, Wind ${context.weather.wind}mph, Humidity ${context.weather.humidity}%
 - **Active Personnel:** 42 subcontractors on site
 - **Current User Role:** ${userRole}
@@ -120,7 +86,7 @@ When relevant, include specific recommendations with measurable outcomes.`;
       }
     }
     if (GEMINI_API_KEY) {
-      const genai = new import_genai.GoogleGenAI({ apiKey: GEMINI_API_KEY });
+      const genai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
       const response = await genai.models.generateContent({
         model: "gemini-2.0-flash",
         contents: [{ role: "user", parts: [{ text: query }] }],
@@ -147,7 +113,7 @@ app.get("/api/health", (_req, res) => {
   });
 });
 app.get("*", (_req, res) => {
-  const indexPath = import_path.default.join(distPath, "index.html");
+  const indexPath = path.join(distPath, "index.html");
   res.sendFile(indexPath, (err) => {
     if (err) res.status(404).send("Not found");
   });
@@ -163,6 +129,9 @@ app.listen(PORT, () => {
   }
 });
 var server_default = app;
+export {
+  server_default as default
+};
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0

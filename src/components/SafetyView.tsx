@@ -171,7 +171,7 @@ export const SafetyView: React.FC<SafetyViewProps> = ({
           <div className="flex flex-col gap-4 text-xs">
             {[
               { crew: 'Ironworkers Local 4', rate: 100, color: 'bg-[#2E7D32]' },
-              { crew: 'FlowTech Plumbing', rate: 94, color: 'bg-[#2E7D32]' },
+              { crew: 'Plumbing Subcontractor', rate: 94, color: 'bg-[#2E7D32]' },
               { crew: 'Concrete Crew B', rate: 91, color: 'bg-[#C5A059]' },
               { crew: 'Volt Builders', rate: 88, color: 'bg-[#C5A059]' },
               { crew: 'Excavation Crew A', rate: 100, color: 'bg-[#2E7D32]' }

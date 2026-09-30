@@ -12,8 +12,8 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-F59E0B?style=for-the-badge)](./LICENSE)
 
 <p align="center">
-  <b>Mission-control telemetry for multi-crore civil infrastructure and skyscraper execution.</b><br>
-  Treats high-stakes civil engineering like an aerospace launchpad: live IoT weather sensors, automated tower crane hazard interlocks, role-based cockpit views, multi-crore INR financial variance analytics, and dual-engine AI intelligence.
+  <b>Mission-control telemetry for construction project execution.</b><br>
+  A simulated operations console with weather telemetry, safety interlocks, role-based views, financial variance analytics, and optional AI assistance.
 </p>
 
 [⚡ Quick Start](#-quick-start) • [📹 Video Showcase](#-video-showcase) • [✨ Key Features](#-key-features) • [🏛️ System Architecture](#-system-architecture) • [🤖 AI Copilot](#-dual-engine-ai-copilot) • [📊 EVM Financial Engine](#-evm-financial-engine)
@@ -48,7 +48,7 @@
 
 | Timestamp | Operational Phase | Telemetry & System Action |
 |:---|:---|:---|
-| **`0:00 - 0:05`** | **The Command Center** | Header telemetry initialisation: `₹42.8 Cr Active Budget`, CPI `1.08`, weather telemetry (`78°F`, `8 mph`), and instant zero lost-time safety streak verification. |
+| **`0:00 - 0:05`** | **The Command Center** | Header telemetry initialization with simulated budget, CPI, weather, and safety status. |
 | **`0:05 - 0:11`** | **Role-Based Shift & Gantt** | Perspective shift to **Site Superintendent**; dynamic Gantt schedule tracking across foundation, excavation, and steel framing (L1–L5) with live dependency bars. |
 | **`0:11 - 0:16`** | **Automated Hazard Interlock** | High wind sensor spike (`24 mph` exceeding `20 mph` safety threshold) triggers instantaneous automated **Tower Crane Halt protocol** and safety dispatcher alert. |
 | **`0:16 - 0:19`** | **Enterprise Resolution** | Architectural outro lockup: *"Civil engineering moves fast. Now your telemetry moves faster."* |
@@ -92,14 +92,14 @@ ConstructIQ provides contextual cockpits tailored to each jobsite stakeholder:
 - **👷 Project Manager (PM):** Master timeline, critical path analysis, milestone progress, subcontractor allocation, and delay remediation.
 - **🏗️ Site Superintendent:** Real-time machinery telematics, contractor shift roster, digital punchlist signoffs, and daily field operation logs.
 - **💰 Financial Controller:** Multi-crore INR ledger tracking, Earned Value Management (EVM), Cost Performance Index (CPI), Schedule Performance Index (SPI), and vendor invoice approvals.
-- **🦺 Safety Officer:** IS / OSHA safety compliance, zero lost-time streak counter (184+ days), incident root-cause investigations, and environmental threshold alerts.
+- **🦺 Safety Officer:** IS / OSHA safety compliance, incident root-cause investigations, and environmental threshold alerts.
 - **👔 Executive / Client Stakeholder:** High-level macro portfolio scorecards, ROI forecast, capital expenditure milestones, and automated one-click PDF briefing generator.
 
 ### 2. 🤖 Dual-Engine AI Jobsite Copilot
 ConstructIQ features an enterprise AI Copilot with hot-swappable dual backends:
 - **Primary:** **NVIDIA NIM** running `meta/llama-3.2-11b-vision-instruct` on NVIDIA accelerated cloud infrastructure.
 - **Fallback:** **Google Gemini 2.0 Flash** via the `@google/genai` SDK for low-latency engineering recommendations.
-- **Jobsite Telemetry Synthesis:** The Copilot ingests live state (tasks, active budgets, delayed milestones, weather telemetry, subcontractor loads) into every prompt to deliver precise, context-aware operational guidance.
+- **Telemetry Synthesis:** The Copilot ingests simulated state (tasks, budgets, milestones, weather, and crew loads) into every prompt to deliver context-aware operational guidance.
 
 ### 3. 📅 Interactive Critical-Path Gantt Scheduler
 - Full multi-phase lifecycle management: *Excavation*, *Foundation*, *Framing*, *HVAC/Electrical*, *Finishing*, and *Exterior*.
@@ -112,7 +112,7 @@ ConstructIQ features an enterprise AI Copilot with hot-swappable dual backends:
 - **Automated Hazard Interlock:** When wind speeds exceed 20 mph, the platform triggers an automatic **Tower Crane Safety Shutdown** and logs the incident in real-time.
 
 ### 5. 💵 Indian Rupee (INR / ₹) Financial Terminal
-- Built specifically for multi-crore infrastructure projects with native formatting (`₹ Cr`, `₹ Lakh`).
+- Built for infrastructure projects with native Indian-numbering formatting (`₹ Cr`, `₹ Lakh`).
 - Complete vendor billing pipeline: *Materials*, *Labor*, *Equipment*, and *Subcontractor Services*.
 - Dynamic cashflow burn charts powered by **Recharts**.
 
@@ -208,7 +208,7 @@ Construction-Project/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/anshu706/Construction-Project.git
+git clone <repository-url>
 cd Construction-Project
 ```
 
@@ -226,12 +226,12 @@ cp .env.example .env
 
 Edit `.env` with your preferred AI credentials:
 ```ini
-# NVIDIA NIM AI API Key (Meta Llama 3.2 on accelerated compute)
-NVIDIA_API_KEY="nvapi-your-key-here"
+# NVIDIA NIM AI API key (server-side only)
+NVIDIA_API_KEY="your-nvidia-api-key"
 NVIDIA_MODEL="meta/llama-3.2-11b-vision-instruct"
 
-# Google Gemini API Key (Fallback AI Engine)
-GEMINI_API_KEY="AIzaSyYourGeminiKeyHere"
+# Google Gemini API key (optional server-side fallback)
+GEMINI_API_KEY="your-gemini-api-key"
 
 # Server Ports
 PORT=3001
@@ -271,7 +271,7 @@ ConstructIQ includes a dedicated backend endpoint (`POST /api/copilot`) that dyn
 
 ```json
 {
-  "query": "Assess structural delay risk on Floor 3 concrete pour due to forecasted 24mph winds",
+  "query": "Assess schedule risk for a concrete pour due to forecasted high winds",
   "userRole": "SiteSupervisor",
   "context": {
     "tasks": [...],
@@ -296,7 +296,7 @@ $$\text{SPI} = \frac{\text{Earned Value (EV)}}{\text{Planned Value (PV)}}$$
 
 - **$\text{CPI} > 1.0$**: Under budget (e.g. `1.08` indicates 8% cost efficiency).
 - **$\text{SPI} \ge 1.0$**: Ahead or on schedule.
-- **₹ Cr Notation**: All figures formatted to Indian numbering system standard (`₹12.50 Cr`, `₹42.8 Cr`).
+- **₹ Cr Notation**: All figures are formatted to the Indian numbering system standard.
 
 ---
 

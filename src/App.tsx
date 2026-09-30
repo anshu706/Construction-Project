@@ -436,7 +436,7 @@ export default function App() {
                         <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-[#7A756C]">Executive Dispatch // Site Health</span>
                       </div>
                       <h2 className="text-[#1A1A1A] text-2xl font-sans font-bold tracking-tight mb-3">
-                        Bangalore Commercial Tower Operations Registry
+                        Construction Operations Registry
                       </h2>
                       <p className="text-[#4A4740] text-sm font-sans leading-relaxed italic max-w-4xl">
                         "The 5-story mixed-use commercial tower is currently operating at <span className="text-[#1A1A1A] font-bold font-sans not-italic text-xs bg-[#E5E2D9] px-1.5 py-0.5 rounded">67% physical completion rate</span>. Structural steel frameworks have successfully reached Level 4 decks, while interior rough-in plumbing and electrical works progress steadily in alignment with baseline targets."

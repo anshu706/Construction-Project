@@ -81,7 +81,7 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
                 <span className="text-[10px] uppercase tracking-wider font-mono text-[#7A756C]">ISO 9001 AUDITED</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight uppercase">
-                Bangalore Metro Commercial Tower
+                Mixed-Use Commercial Tower
               </h1>
               <p className="text-xs text-[#7A756C] mt-1 font-mono">
                 Site ID: BLR-SEZ-2026-T4 • Phase 2 Structural & MEP Execution
@@ -111,7 +111,7 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
 
             <div className="p-4 border border-[#D1CEC6] bg-[#F4F1EA]">
               <span className="text-[9px] uppercase tracking-widest font-mono text-[#7A756C] block">Safety Streak</span>
-              <span className="text-2xl font-bold font-mono text-emerald-700 block mt-1">184 Days</span>
+              <span className="text-2xl font-bold font-mono text-emerald-700 block mt-1">Simulated</span>
               <span className="text-[10px] text-emerald-700 font-bold uppercase">Zero Lost-Time Cases</span>
             </div>
 
@@ -161,7 +161,7 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div className="p-3 bg-[#F4F1EA] border border-[#D1CEC6] font-mono text-xs">
                 <span className="text-[#7A756C] block text-[9px] uppercase tracking-wider">Total Approved Baseline:</span>
-                <span className="text-base font-bold text-[#1A1A1A]">₹ 12,50,00,000 (100%)</span>
+                <span className="text-base font-bold text-[#1A1A1A]">Configured baseline (100%)</span>
               </div>
               <div className="p-3 bg-[#F4F1EA] border border-[#D1CEC6] font-mono text-xs">
                 <span className="text-[#7A756C] block text-[9px] uppercase tracking-wider">Unallocated Contingency Reserve:</span>
@@ -209,7 +209,7 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
 
             <div>
               <div className="border-b border-[#1A1A1A] pb-8 mb-2"></div>
-              <span className="font-bold block uppercase text-[10px] tracking-wider">Amit Kumar</span>
+              <span className="font-bold block uppercase text-[10px] tracking-wider">Project Coordinator</span>
               <span className="text-[10px] text-[#7A756C] uppercase font-mono">Financial Controller</span>
             </div>
           </div>

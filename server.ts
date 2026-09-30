@@ -22,9 +22,9 @@ const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
 
 const PORT = process.env.PORT || 3001;
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || process.env.VITE_NVIDIA_API_KEY;
+const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY;
 const NVIDIA_MODEL = process.env.NVIDIA_MODEL || 'meta/llama-3.2-11b-vision-instruct';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 // --- POST /api/copilot ---
 app.post('/api/copilot', async (req, res) => {
@@ -68,18 +68,18 @@ app.post('/api/copilot', async (req, res) => {
     const delayedTasks = context.tasks.filter((t: any) => t.status === 'Delayed');
 
     const systemPrompt = `You are ConstructIQ Copilot, an expert AI construction project intelligence assistant.
-You have live telemetry access to the Bangalore Commercial Tower project (5-story mixed-use commercial tower, Bangalore Tech Park Phase 2).
+You have live telemetry access to a simulated mixed-use commercial tower project.
 
 ## Live Site Data (Real-time Telemetry):
 - **Overall Progress:** ${avgProgress}% physical completion
-- **Total Budget:** ₹12,50,00,000 (₹12.50 Crores)
+- **Total Budget:** Use the configured simulated project baseline.
 - **Spent/Approved:** ₹${totalSpent.toLocaleString('en-IN')} (${((totalSpent / 125000000) * 100).toFixed(1)}% of budget)
 - **CPI:** ${((125000000 * 0.714) / Math.max(totalSpent, 1)).toFixed(2) || '1.08'} (Cost Performance Index)
 - **Active Tasks:** ${context.tasks.filter((t: any) => t.status === 'In Progress').length}/${context.tasks.length} tasks running
 - **Critical Path Tasks:** ${criticalTasks.map((t: any) => `${t.name} (${t.progress}%)`).join(', ') || 'None'}
 - **Delayed Tasks:** ${delayedTasks.length === 0 ? 'None' : delayedTasks.map((t: any) => t.name).join(', ')}
 - **Open Safety Incidents:** ${openIncidents.length} (${openIncidents.map((i: any) => i.type).join(', ') || 'None'})
-- **Safety Days Streak:** 184 Days Zero Lost-Time
+- **Safety Days Streak:** Use the simulated safety streak.
 - **Weather:** ${context.weather.condition}, ${context.weather.temp}°F, Wind ${context.weather.wind}mph, Humidity ${context.weather.humidity}%
 - **Active Personnel:** 42 subcontractors on site
 - **Current User Role:** ${userRole}
