@@ -188,9 +188,9 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     fetch('/api/health')
       .then(r => r.json())
       .then(data => {
-        if (data.status === 'ok' && data.aiProvider !== 'None') {
+        if (data.status === 'ok' && data.aiAvailable) {
           setUsingRealAI(true);
-          setActiveEngine(`${data.aiProvider} (${data.model || 'Live'})`);
+          setActiveEngine('ConstructIQ AI Proxy (Live)');
         } else {
           setUsingRealAI(false);
           setActiveEngine('Local Analytics Mode');
@@ -289,17 +289,6 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
     { label: '🛡️ Safety & PPE Audit Plan', query: 'Generate OSHA compliance and safety mitigation checklist' },
   ];
 
-  const renderMessageText = (text: string) => {
-    return text
-      .replace(/### (.*)/g, '<h4 class="font-bold text-xs uppercase tracking-wider text-[#C5A059] mb-1.5 mt-2">$1</h4>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-[#1A1A1A]">$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-      .replace(/^(\d+)\. (.*)/gm, '<div class="flex gap-1.5 my-0.5"><span class="text-[#C5A059] font-bold shrink-0">$1.</span><span>$2</span></div>')
-      .replace(/^- (.*)/gm, '<div class="flex gap-1.5 my-0.5"><span class="text-[#C5A059] shrink-0">•</span><span>$1</span></div>')
-      .replace(/\n\n/g, '<br/><br/>')
-      .replace(/\n/g, '<br/>');
-  };
-
   return (
     <div className="fixed inset-y-0 right-0 w-full sm:w-[480px] bg-white border-l border-[#D1CEC6] shadow-2xl z-50 flex flex-col animate-fade-in font-sans">
       {/* Header */}
@@ -376,10 +365,7 @@ export const AICopilotDrawer: React.FC<AICopilotDrawerProps> = ({
                   : 'bg-white border border-[#D1CEC6] text-[#1A1A1A] shadow-sm'
               }`}
             >
-              <div
-                className="prose prose-xs max-w-none"
-                dangerouslySetInnerHTML={{ __html: renderMessageText(msg.text) }}
-              />
+              <div className="prose prose-xs max-w-none whitespace-pre-wrap">{msg.text}</div>
             </div>
           </div>
         ))}

@@ -15,6 +15,15 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
 app.use(express.json({ limit: '1mb' }));
 
 // Serve Vite-built frontend in production
@@ -25,35 +34,68 @@ const PORT = process.env.PORT || 3001;
 const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY;
 const NVIDIA_MODEL = process.env.NVIDIA_MODEL || 'meta/llama-3.2-11b-vision-instruct';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const allowedRoles = new Set(['ProjectManager', 'SiteSupervisor', 'FinanceManager', 'Executive', 'SafetyOfficer']);
+const rateLimitWindowMs = 60_000;
+const rateLimitMaxRequests = 12;
+const requestHistory = new Map<string, number[]>();
+
+const isRecord = (value: unknown): value is Record<string, unknown> => (
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+);
+
+function validateCopilotRequest(body: unknown): { query: string; context: any; userRole: string } | null {
+  if (!isRecord(body) || typeof body.query !== 'string' || body.query.trim().length === 0 || body.query.length > 2_000) {
+    return null;
+  }
+  if (!isRecord(body.context) || !Array.isArray(body.context.tasks) || !Array.isArray(body.context.invoices) || !Array.isArray(body.context.incidents)) {
+    return null;
+  }
+  if (body.context.tasks.length > 100 || body.context.invoices.length > 100 || body.context.incidents.length > 100) {
+    return null;
+  }
+  if (!isRecord(body.context.weather) || typeof body.context.weather.condition !== 'string') {
+    return null;
+  }
+  const userRole = typeof body.userRole === 'string' && allowedRoles.has(body.userRole)
+    ? body.userRole
+    : null;
+  return userRole ? { query: body.query.trim(), context: body.context, userRole } : null;
+}
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (requestHistory.get(ip) ?? []).filter(timestamp => now - timestamp < rateLimitWindowMs);
+  recent.push(now);
+  requestHistory.set(ip, recent);
+  return recent.length > rateLimitMaxRequests;
+}
+
+async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit, timeoutMs = 20_000): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 // --- POST /api/copilot ---
 app.post('/api/copilot', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  if (isRateLimited(req.ip)) {
+    return res.status(429).json({ error: 'Too many requests. Please try again shortly.' });
+  }
+
   if (!NVIDIA_API_KEY && !GEMINI_API_KEY) {
-    return res.status(503).json({
-      error: 'No AI API key configured. Set NVIDIA_API_KEY or GEMINI_API_KEY in .env.'
-    });
+    return res.status(503).json({ error: 'AI service is not configured.' });
   }
 
-  const { query, context, userRole } = req.body as {
-    query: string;
-    context: {
-      tasks: any[];
-      invoices: any[];
-      incidents: any[];
-      weather: {
-        temp: number;
-        condition: string;
-        wind: number;
-        humidity: number;
-        forecast: string;
-      };
-    };
-    userRole: string;
-  };
-
-  if (!query || !context) {
-    return res.status(400).json({ error: 'Missing query or context.' });
+  const validated = validateCopilotRequest(req.body);
+  if (!validated) {
+    return res.status(400).json({ error: 'Invalid request.' });
   }
+  const { query, context, userRole } = validated;
 
   try {
     // Build a rich project summary for the system prompt
@@ -98,7 +140,7 @@ When relevant, include specific recommendations with measurable outcomes.`;
 
     // 1. Try NVIDIA NIM (Meta Llama 3.2 on accelerated compute)
     if (NVIDIA_API_KEY) {
-      const nvidiaResp = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+      const nvidiaResp = await fetchWithTimeout('https://integrate.api.nvidia.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${NVIDIA_API_KEY}`,
@@ -145,16 +187,16 @@ When relevant, include specific recommendations with measurable outcomes.`;
     return res.status(502).json({ error: 'AI provider failed to generate a response.' });
   } catch (err: any) {
     console.error('[Copilot API Error]', err?.message || err);
-    return res.status(500).json({ error: err?.message || 'Internal server error.' });
+    return res.status(502).json({ error: 'AI service temporarily unavailable.' });
   }
 });
 
 // Health check endpoint
 app.get('/api/health', (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   res.json({
     status: 'ok',
-    aiProvider: NVIDIA_API_KEY ? 'NVIDIA NIM' : GEMINI_API_KEY ? 'Google Gemini' : 'None',
-    model: NVIDIA_API_KEY ? NVIDIA_MODEL : GEMINI_API_KEY ? 'gemini-2.0-flash' : 'None'
+    aiAvailable: Boolean(NVIDIA_API_KEY || GEMINI_API_KEY)
   });
 });
 

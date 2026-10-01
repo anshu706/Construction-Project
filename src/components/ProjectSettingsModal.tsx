@@ -47,6 +47,16 @@ export const ProjectSettingsModal: React.FC<ProjectSettingsModalProps> = ({
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
+        const isObject = parsed && typeof parsed === 'object' && !Array.isArray(parsed);
+        const hasValidCollections = isObject &&
+          (!parsed.tasks || Array.isArray(parsed.tasks)) &&
+          (!parsed.invoices || Array.isArray(parsed.invoices)) &&
+          (!parsed.incidents || Array.isArray(parsed.incidents)) &&
+          (!parsed.logs || Array.isArray(parsed.logs)) &&
+          (!parsed.risks || Array.isArray(parsed.risks)) &&
+          (!parsed.milestones || Array.isArray(parsed.milestones)) &&
+          (!parsed.punchItems || Array.isArray(parsed.punchItems));
+        if (!hasValidCollections) throw new Error('Invalid backup structure');
         onImportState(parsed);
         setImportStatus('✅ Project backup state successfully loaded!');
         setTimeout(() => {
